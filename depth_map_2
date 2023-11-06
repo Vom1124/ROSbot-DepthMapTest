@@ -1,0 +1,91 @@
+import os
+import sys
+import numpy as np
+import cv2 as cv
+from tqdm import tqdm
+from matplotlib import pyplot as plt
+
+def sum_of_abs_diff(pixel_vals_1, pixel_vals_2):
+    """
+    Args:
+        pixel_vals_1 (numpy.ndarray): pixel block from left image
+        pixel_vals_2 (numpy.ndarray): pixel block from right image
+
+    Returns:
+        float: Sum of absolute difference between individual pixels
+    """
+    if pixel_vals_1.shape != pixel_vals_2.shape:
+        return -1
+
+    return np.sum(abs(pixel_vals_1 - pixel_vals_2))
+
+BLOCK_SIZE = 7
+SEARCH_BLOCK_SIZE = 16
+
+def compare_blocks(y, x, block_left, right_array, block_size=5):
+    """
+    Compare left block of pixels with multiple blocks from the right
+    image using SEARCH_BLOCK_SIZE to constrain the search in the right
+    image.
+
+    Args:
+        y (int): row index of the left block
+        x (int): column index of the left block
+        block_left (numpy.ndarray): containing pixel values within the 
+                    block selected from the left image
+        right_array (numpy.ndarray]): containing pixel values for the 
+                     entrire right image
+        block_size (int, optional): Block of pixels width and height. 
+                                    Defaults to 5.
+
+    Returns:
+        tuple: (y, x) row and column index of the best matching block 
+                in the right image
+    """
+    # Get search range for the right image
+    x_min = max(0, x - SEARCH_BLOCK_SIZE)
+    x_max = min(right_array.shape[1], x + SEARCH_BLOCK_SIZE)
+    #print(f'search bounding box: ({y, x_min}, ({y, x_max}))')
+    first = True
+    min_sad = None
+    min_index = None
+    for x in range(x_min, x_max):
+        block_right = right_array[y: y+block_size,
+                                  x: x+block_size]
+        sad = sum_of_abs_diff(block_left, block_right)
+        #print(f'sad: {sad}, {y, x}')
+        if first:
+            min_sad = sad
+            min_index = (y, x)
+            first = False
+        else:
+            if sad < min_sad:
+                min_sad = sad
+                min_index = (y, x)
+
+    return min_index
+
+iml = np.asarray(cv.imread("Rosbot codes/tsukuba_l.png", 0))
+imr = np.asarray(cv.imread("Rosbot codes/tsukuba_r.png", 0))
+
+np.set_printoptions(threshold=sys.maxsize)# to display all the points in the array
+# print(iml)
+# plt.imshow(iml,cmap="gray")
+# plt.show()
+h, w = iml.shape[:2]
+disparity_map = np.zeros((h, w))
+print(disparity_map.shape)
+#min_index = compare_blocks(imr,iml, block_left, right_array, block_size=BLOCK_SIZE)
+#disparity_map[y, x] = abs(min_index[1] - x)
+
+
+for y in tqdm(range(BLOCK_SIZE, h-BLOCK_SIZE)):
+        for x in range(BLOCK_SIZE, w-BLOCK_SIZE):
+            block_left = imr[y:y + BLOCK_SIZE,
+                                    x:x + BLOCK_SIZE]
+            min_index = compare_blocks(y, x, block_left,
+                                    iml,
+                                    block_size=BLOCK_SIZE)
+            disparity_map[y, x] = abs(min_index[1] - x)
+plt.imshow(disparity_map, cmap='gray')
+plt.show()

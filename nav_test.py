@@ -25,7 +25,7 @@ class Nav_Test(Node):
         def odom_callback(self,msg):
                 x = msg.pose.pose.position.x
                 y = msg.pose.pose.position.y
-                rot_q =  msg.pose.pose.orientation #rotation quaternio
+                rot_q =  msg.pose.pose.orientation #rotation quaternion
                 (roll, pitch, theta) = euler_from_quaternion([rot_q.x, rot_q.y, rot_q.z, rot_q.w]) #yaw=theta here
                 self.get_logger().info(  'x= '+str(x) +'  y=  '+str(y)+ '  theta=  ' + str(theta)  )
 
