@@ -43,13 +43,6 @@ def myBM_Algo(iml, imr, w, h, BS, NP):
     # cv.wa5itKey(0)
     # return DM
 
-def myCostFunction(LB, RB, BS):
-    D_sum=0
-    for i in range(BS):
-        for j in range(BS):
-            D = abs(int(LB[i,j])-int(RB[i,j]))
-            D_sum+= D
-    return D_sum
     
 iml = np.asarray(cv.imread("Rosbot codes/tsukuba_l.png", 0))
 imr = np.asarray(cv.imread("Rosbot codes/tsukuba_r.png", 0))
