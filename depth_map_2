@@ -19,10 +19,10 @@ def sum_of_abs_diff(pixel_vals_1, pixel_vals_2):
 
     return np.sum(abs(pixel_vals_1 - pixel_vals_2))
 
-BLOCK_SIZE = 7
+BLOCK_SIZE = 5
 SEARCH_BLOCK_SIZE = 16
 
-def compare_blocks(y, x, block_left, right_array, block_size=5):
+def compare_blocks(y, x, block_left, right_array, block_size=21):
     """
     Compare left block of pixels with multiple blocks from the right
     image using SEARCH_BLOCK_SIZE to constrain the search in the right
@@ -65,26 +65,23 @@ def compare_blocks(y, x, block_left, right_array, block_size=5):
 
     return min_index
 
-iml = np.asarray(cv.imread("Rosbot codes/tsukuba_l.png", 0))
-imr = np.asarray(cv.imread("Rosbot codes/tsukuba_r.png", 0))
+iml = np.ndarray.astype(cv.imread("Rosbot codes/tsukuba_l.png", 0),'int32')
+imr = np.ndarray.astype(cv.imread("Rosbot codes/tsukuba_r.png", 0),'int32')
 
 np.set_printoptions(threshold=sys.maxsize)# to display all the points in the array
 # print(iml)
 # plt.imshow(iml,cmap="gray")
 # plt.show()
-h, w = iml.shape[:2]
+h, w = imr.shape
 disparity_map = np.zeros((h, w))
 print(disparity_map.shape)
-#min_index = compare_blocks(imr,iml, block_left, right_array, block_size=BLOCK_SIZE)
-#disparity_map[y, x] = abs(min_index[1] - x)
-
 
 for y in tqdm(range(BLOCK_SIZE, h-BLOCK_SIZE)):
         for x in range(BLOCK_SIZE, w-BLOCK_SIZE):
-            block_left = imr[y:y + BLOCK_SIZE,
+            block_left = iml[y:y + BLOCK_SIZE,
                                     x:x + BLOCK_SIZE]
             min_index = compare_blocks(y, x, block_left,
-                                    iml,
+                                    imr,
                                     block_size=BLOCK_SIZE)
             disparity_map[y, x] = abs(min_index[1] - x)
 plt.imshow(disparity_map, cmap='gray')
