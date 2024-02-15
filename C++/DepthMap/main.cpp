@@ -105,8 +105,7 @@ int main()
     // thread th7(my_BM_algo, left_img, right_img, DM, H, W, WS, scale_adjust, 
     //                     int(6*H/8),int(7*H/8)); 
     // thread th8(my_BM_algo, left_img, right_img, DM, H, W, WS, scale_adjust, 
-    //                     int(7*H/8),int(8*H/8));                                                                                                                                                                                                                                                                         
-
+    //                     int(7*H/8),int(8*H/8));                                                                                                                                                                                                                                                                        
     // th1.join();
     // th2.join();
     // th3.join();
