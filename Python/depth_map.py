@@ -88,15 +88,25 @@ def myBM_Algo(iml, imr, w, h, BS=BLOCK_SIZE, NP=Num_Disparities):
     return DM
 
 
-iml = np.ndarray.astype(cv.imread("tsukuba_l.png", 0),'float64')
-imr = np.ndarray.astype(cv.imread("tsukuba_r.png", 0),'float64')
+iml = np.ndarray.astype(cv.imread("tsukuba_l.png", 0),'uint8')
+imr = np.ndarray.astype(cv.imread("tsukuba_r.png", 0),'uint8')
 im_array_type=iml.dtype
 im_disparity =  cv.imread("Rosbot codes/tsukuba_disp.png", 0)
 plt.imshow(iml)
+# plt.show()
+
+# Stereo BM usin OpenCV
+stereo = cv.StereoBM_create(numDisparities=16, blockSize=5)
+my_DM = stereo.compute(iml,imr)
+plt.imshow(my_DM,'gray')
 plt.show()
+cv.waitKey(0)
+
+# Stereo BM using my_BM_algo
+
 
 (h, w) = iml.shape[:2]
-my_DM = myBM_Algo((iml), (imr), w, h)
+my_DM = myBM_Algo(int(iml), int(imr), w, h)
 kernel = np.ones((5, 5), np.float64)
 
 plt.imshow(my_DM,'gray')
@@ -104,18 +114,14 @@ plt.show()
 filterSize =(5,5) 
 kernel = cv.getStructuringElement(cv.MORPH_RECT,  
                                    filterSize) 
-tophat_img = cv.morphologyEx(my_DM,  
-                              cv.MORPH_TOPHAT, 
-                              kernel) 
-plt.imshow( tophat_img,'gray') 
-plt.title("Disparity Map")
-plt.show()
-# Stereo BM usin OpenCV
-# stereo = cv.StereoBM_create(numDisparities=16, blockSize=17)
-# my_DM = stereo.compute(iml,imr)
-# plt.imshow(my_DM,'gray')
+# tophat_img = cv.morphologyEx(my_DM,  
+#                               cv.MORPH_TOPHAT, 
+#                               kernel) 
+# plt.imshow( tophat_img,'gray') 
+# plt.title("Disparity Map")
 # plt.show()
-# cv.waitKey(0)
+
+
 
 
         

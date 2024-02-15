@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/vom/ros2_ws/ROSbot-codes/C++/DepthMap/build",
+  "command": "/usr/bin/g++  -isystem /usr/include/opencv4 -O3 -DNDEBUG -o CMakeFiles/DepthMap.dir/main.cpp.o -c /home/vom/ros2_ws/ROSbot-codes/C++/DepthMap/main.cpp",
+  "file": "/home/vom/ros2_ws/ROSbot-codes/C++/DepthMap/main.cpp"
+}
+]
