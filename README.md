@@ -1,13 +1,13 @@
 Odometry Reset:
 
-ros2 service call /set_pose robot_localization/srv/SetPose "pose:
-   header:
+      ros2 service call /set_pose robot_localization/srv/SetPose "pose:
+      header:
      stamp:
        sec: 0
        nanosec: 0
      frame_id: ''
-   pose:
-     pose:
+      pose:
+        pose:
        position:
          x: 0.0
          y: 0.0
